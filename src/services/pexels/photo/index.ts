@@ -1,20 +1,29 @@
-import { AxiosResponse } from "axios";
 import { get } from "../base";
 import {
   CuratedParams,
-  CuratedResponse,
   PIXEL_PHOTO_ENDPOINTS,
   SearchParams,
-  SearchResponse,
+  BasePhotoResponse,
 } from "./photo.types";
 
+// default params
+const PER_PAGE = 10;
+const QUERY = "Ocean";
+const PAGE = 1;
+
 const PexelsPhotoAPI = {
-  search: (params?: SearchParams) =>
-    get<AxiosResponse<SearchResponse>>(PIXEL_PHOTO_ENDPOINTS.SEARCH, {
+  search: (
+    params: SearchParams = {
+      per_page: PER_PAGE,
+      query: QUERY,
+      page: PAGE,
+    }
+  ) =>
+    get<BasePhotoResponse>(PIXEL_PHOTO_ENDPOINTS.SEARCH, {
       params,
     }),
-  curated: (params?: CuratedParams) =>
-    get<AxiosResponse<CuratedResponse>>(PIXEL_PHOTO_ENDPOINTS.CURATED, {
+  curated: (params: CuratedParams = { per_page: PER_PAGE, page: PAGE }) =>
+    get<BasePhotoResponse>(PIXEL_PHOTO_ENDPOINTS.CURATED, {
       params,
     }),
 };

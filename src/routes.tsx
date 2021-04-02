@@ -9,6 +9,9 @@ const Routes = () => {
       <Suspense fallback={<LoadingScreen />}>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="*">
+            <div>Could not find any matches</div>
+          </Route>
         </Switch>
       </Suspense>
     </div>

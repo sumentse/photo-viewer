@@ -40,17 +40,11 @@ export type photo = {
   liked: boolean;
 };
 
-export type SearchResponse = {
+export interface BasePhotoResponse {
   total_result: number;
   page: number;
   per_page: number;
   photos: photo[];
   next_page: string;
-};
-
-export type CuratedResponse = {
-  page: number;
-  per_page: number;
-  photo: photo[];
-  next_page: string;
-};
+  total_results: number;
+}

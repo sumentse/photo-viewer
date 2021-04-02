@@ -3,15 +3,32 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import Routes from "./routes";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  unstable_createMuiStrictModeTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import { blue } from "@material-ui/core/colors";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 
-const theme = createMuiTheme({
+const createTheme =
+  process.env.NODE_ENV === "development"
+    ? unstable_createMuiStrictModeTheme
+    : createMuiTheme;
+
+const theme = createTheme({
   palette: {
     primary: {
       main: blue[600],
+    },
+  },
+  overrides: {
+    MuiButton: {
+      containedPrimary: {
+        textTransform: "none",
+        borderRadius: "10px",
+      },
     },
   },
 });
