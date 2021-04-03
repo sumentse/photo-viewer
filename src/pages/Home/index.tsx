@@ -1,7 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { PexelsPhotoAPI } from "../../services/pexels";
-import Gallery from "react-photo-gallery";
-import { photo } from "../../services/pexels/photo/photo.types";
+import { useState } from "react";
+import Gallery, { PhotoClickHandler } from "react-photo-gallery";
 import {
   Container,
   Box,
@@ -11,68 +9,38 @@ import {
   Typography,
   Fab,
   Fade,
+  Modal,
 } from "@material-ui/core";
 import useStyles from "../Home/home.styles";
 import NavBar from "../../components/NavBar";
 import { Navigation } from "@material-ui/icons";
 import useDetectScroll from "../../hooks/useDetectScroll";
+import usePixelPhoto from "../../hooks/usePixelPhoto";
+import { photo } from "../../services/pexels/photo/photo.types";
+import clsx from "clsx";
+import formatNumber from "../../utils/formatter";
 
 const Home = () => {
-  const [photos, setPhotos] = useState<photo[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1);
-  const totalPagesRef = useRef<number>(0);
-
-  const perPage = 10; // we can add a per page picker in future iteration
-
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<photo>();
+  const {
+    photos,
+    totalImages,
+    searchTerm,
+    nextPage,
+    prevPage,
+    loading,
+    search,
+    page,
+    maxPage,
+  } = usePixelPhoto();
   const classes = useStyles();
   const { scrolling } = useDetectScroll();
 
-  useEffect(() => {
-    const getCuratedPhoto = async () => {
-      try {
-        setLoading(true);
-        const response = await PexelsPhotoAPI.curated({
-          page,
-          per_page: perPage,
-        });
-        setPhotos(response.data.photos);
-        totalPagesRef.current = Math.ceil(
-          response.data.total_results / perPage
-        );
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-      }
-    };
-    getCuratedPhoto();
-  }, [page, perPage]);
-
-  useEffect(() => {
-    const getPhotos = async () => {
-      try {
-        setLoading(true);
-        const response = await PexelsPhotoAPI.search({
-          page,
-          query: searchTerm,
-          per_page: perPage,
-        });
-        setPhotos(response.data.photos);
-        totalPagesRef.current = Math.ceil(
-          response.data.total_results / perPage
-        );
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-      }
-    };
-    if (searchTerm) {
-      getPhotos();
-    }
-  }, [page, perPage, searchTerm]);
-
-  const handleClick = (e: any) => {};
+  const handleClick: PhotoClickHandler = (e, { index }) => {
+    setSelectedPhoto(photos[index]);
+    setShowModal(true);
+  };
 
   const buildPhotos = () => {
     return photos.map(({ src, width, height }) => {
@@ -84,14 +52,22 @@ const Home = () => {
     });
   };
 
-  const nextPage = () => {
-    setPage((prevNum) => {
-      // prevent page from exceeding
-      if (prevNum + 1 > totalPagesRef.current) {
-        return prevNum;
-      }
-      return prevNum + 1;
-    });
+  const renderModalBody = () => {
+    if (selectedPhoto) {
+      const { photographer, photographer_url } = selectedPhoto;
+      return (
+        <>
+          <Typography variant="h6">Photo Details</Typography>
+          <Typography>{photographer}</Typography>
+          <Typography style={{ wordWrap: "break-word" }}>
+            <a href={photographer_url} target="_blank" rel="noreferrer">
+              {photographer_url}
+            </a>
+          </Typography>
+        </>
+      );
+    }
+    return null;
   };
 
   const renderGallery = () => {
@@ -104,14 +80,30 @@ const Home = () => {
             </Container>
           </Box>
           <Box className={classes.nextPageContainer} my={5}>
-            <Button
-              className={classes.nextButton}
-              variant="contained"
-              color="primary"
-              onClick={nextPage}
-            >
-              Next Page
-            </Button>
+            <Grid container justify="center">
+              <Grid item>
+                <Button
+                  className={classes.paginationButton}
+                  variant="contained"
+                  color="primary"
+                  onClick={prevPage}
+                  disabled={page === 1}
+                >
+                  Previous
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  className={classes.paginationButton}
+                  variant="contained"
+                  color="primary"
+                  disabled={page === maxPage}
+                  onClick={nextPage}
+                >
+                  Next
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
         </>
       );
@@ -139,13 +131,17 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <Box>
       <NavBar
         title="Phototastic!"
-        onSearch={(userInput) => setSearchTerm(userInput)}
+        onSearch={(userInput) => search(userInput)}
       />
       {loading && <LinearProgress />}
       {renderGallery()}
+      <hr />
+      <Container>
+        <Typography>{formatNumber(totalImages)} Free images</Typography>
+      </Container>
       <Fade in={scrolling}>
         <Fab
           className={classes.fab}
@@ -157,7 +153,14 @@ const Home = () => {
           <Navigation className={classes.navigationIcon} />
         </Fab>
       </Fade>
-    </div>
+      <Modal
+        className={classes.modal}
+        open={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <div className={clsx(classes.paper)}>{renderModalBody()}</div>
+      </Modal>
+    </Box>
   );
 };
 

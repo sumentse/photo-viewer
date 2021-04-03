@@ -9,8 +9,9 @@ const useStyles = makeStyles((theme) => {
     nextPageContainer: {
       textAlign: "center",
     },
-    nextButton: {
-      width: "150px",
+    paginationButton: {
+      width: "120px",
+      margin: "0px 10px",
     },
     fab: {
       position: "fixed",
@@ -23,6 +24,18 @@ const useStyles = makeStyles((theme) => {
     },
     navigationIcon: {
       color: "black",
+    },
+    paper: {
+      position: "absolute",
+      width: "80%",
+      background: theme.palette.background.paper,
+      padding: "20px",
+      margin: "auto",
+    },
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
   };
 });

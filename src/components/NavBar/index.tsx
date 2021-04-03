@@ -11,7 +11,7 @@ import { grey } from "@material-ui/core/colors";
 import SearchIcon from "@material-ui/icons/Search";
 import { useState } from "react";
 
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles((theme) => {
   return {
     title: {
       flexGrow: 1,
@@ -21,6 +21,15 @@ const useStyles = makeStyles(() => {
     },
     search: {
       padding: "0px 10px",
+      margin: "0px 10px",
+      [theme.breakpoints.up("sm")]: {
+        position: "absolute",
+        top: "10px",
+        right: "15px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        display: "flex",
+      },
     },
   };
 });
@@ -35,39 +44,42 @@ const NavBar = ({ title, onSearch }: Props) => {
   const classes = useStyles();
 
   return (
-    <AppBar
-      elevation={0}
-      position="relative"
-      data-testid="nav-bar"
-      color="transparent"
-    >
-      <Toolbar>
-        <Typography
-          data-testid="navbar-title"
-          variant="h6"
-          color="inherit"
-          className={classes.title}
-        >
-          {title}
-        </Typography>
-        <Paper className={classes.search} elevation={0}>
-          <InputBase
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search..."
-            inputProps={{ "aria-label": "search" }}
-            autoFocus
-            onKeyPress={(e) => {
-              if (e.code === "Enter") {
-                onSearch(searchTerm);
-              }
-            }}
-          />
-          <IconButton aria-label="search" onClick={() => onSearch(searchTerm)}>
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar
+        elevation={0}
+        position="relative"
+        data-testid="nav-bar"
+        color="transparent"
+      >
+        <Toolbar>
+          <Typography
+            data-testid="navbar-title"
+            variant="h6"
+            color="inherit"
+            className={classes.title}
+          >
+            {title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Paper className={classes.search} elevation={0}>
+        <InputBase
+          style={{ flexGrow: 1 }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search..."
+          inputProps={{ "aria-label": "search" }}
+          autoFocus
+          onKeyPress={(e) => {
+            if (e.code === "Enter") {
+              onSearch(searchTerm);
+            }
+          }}
+        />
+        <IconButton aria-label="search" onClick={() => onSearch(searchTerm)}>
+          <SearchIcon />
+        </IconButton>
+      </Paper>
+    </>
   );
 };
 
