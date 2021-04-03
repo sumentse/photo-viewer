@@ -1,46 +1,29 @@
-# Getting Started with Create React App
+# PhotoViewer Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Installation
 
-## Available Scripts
+1. `npm install`
+2. Rename .env.sample to .env file
+3. Get an API key from pixels and paste it for REACT_APP_PIXELS_API_KEY
+4. Run the app `npm start`
 
-In the project directory, you can run:
+## General Architecture
 
-### `yarn start`
+The general architecture of this application is going to be monolithic following a client-server pattern. We will follow the conventional folder structure for building a React application. In order to do this, we will create folders that separate business logic concerns. The structure of this will look like this.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- components
+- hooks
+- pages
+- services
+- utils
+- styles
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+In each of these folder, we will group it by features so it can be navigated easily. For example, if we decided to add another page other than the home page we will need another folder to contain it. This applies the same way for services api. There is no redux/context api at the moment since we are not managing anything yet for global state.
 
-### `yarn test`
+## Libraries I used and reason behind it
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- axios – standard way of making promise based http calls and will be needed for fetching the images at pexels
+- react-photo-gallery – Showing the gallery of images and I thought it look pretty neat with the options it can give you
+- react-router-dom – This will be great for scaling the application and seperating concerns. There might be a future iteration of adding video search.
+- clsx – can be useful to have for conditional css and adding more classes together for styles
+- material ui - Widely adapted in having aesthetic across desktop and mobile platforms. It can help build the app in a timely fashion.
