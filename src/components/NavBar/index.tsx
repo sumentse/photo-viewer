@@ -32,9 +32,11 @@ const useStyles = makeStyles((theme) => {
       },
       [theme.breakpoints.down("sm")]: {
         display: "flex",
-        width: "120px",
         marginTop: "9px",
         height: "35px",
+      },
+      [theme.breakpoints.only("xs")]: {
+        width: "125px",
       },
     },
   };
