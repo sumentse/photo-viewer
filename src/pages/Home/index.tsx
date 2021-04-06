@@ -27,6 +27,7 @@ const Home = () => {
     photos,
     totalImages,
     searchTerm,
+    firstPage,
     nextPage,
     prevPage,
     loading,
@@ -134,7 +135,10 @@ const Home = () => {
     <Box>
       <NavBar
         title="Phototastic!"
-        onSearch={(userInput) => search(userInput)}
+        onSearch={(userInput) => {
+          firstPage();
+          search(userInput);
+        }}
       />
       {loading && <LinearProgress />}
       {renderGallery()}

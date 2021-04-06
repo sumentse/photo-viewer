@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => {
     search: {
       padding: "0px 10px",
       margin: "0px 10px",
+      position: "absolute",
+      top: "0",
+      right: "0",
       [theme.breakpoints.up("sm")]: {
         position: "absolute",
         top: "10px",
@@ -29,6 +32,9 @@ const useStyles = makeStyles((theme) => {
       },
       [theme.breakpoints.down("sm")]: {
         display: "flex",
+        width: "120px",
+        marginTop: "9px",
+        height: "35px",
       },
     },
   };
@@ -60,25 +66,28 @@ const NavBar = ({ title, onSearch }: Props) => {
           >
             {title}
           </Typography>
+          <Paper className={classes.search} elevation={0}>
+            <InputBase
+              style={{ flexGrow: 1 }}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search..."
+              inputProps={{ "aria-label": "search" }}
+              autoFocus
+              onKeyPress={(e) => {
+                if (e.code === "Enter") {
+                  onSearch(searchTerm);
+                }
+              }}
+            />
+            <IconButton
+              aria-label="search"
+              onClick={() => onSearch(searchTerm)}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Paper>
         </Toolbar>
       </AppBar>
-      <Paper className={classes.search} elevation={0}>
-        <InputBase
-          style={{ flexGrow: 1 }}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search..."
-          inputProps={{ "aria-label": "search" }}
-          autoFocus
-          onKeyPress={(e) => {
-            if (e.code === "Enter") {
-              onSearch(searchTerm);
-            }
-          }}
-        />
-        <IconButton aria-label="search" onClick={() => onSearch(searchTerm)}>
-          <SearchIcon />
-        </IconButton>
-      </Paper>
     </>
   );
 };
