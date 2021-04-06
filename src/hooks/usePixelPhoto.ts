@@ -9,7 +9,7 @@ const usePixelPhoto = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const totalPagesRef = useRef<number>(0);
-  const totalImages = useRef<number>(0);
+  const totalImagesRef = useRef<number>(0);
   const perPage = 10; // we can add a per page picker in future iteration
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const usePixelPhoto = () => {
           per_page: perPage,
         });
         setPhotos(response.data.photos);
-        totalImages.current = response.data.total_results;
+        totalImagesRef.current = response.data.total_results;
         totalPagesRef.current = Math.ceil(
           response.data.total_results / perPage
         );
@@ -45,7 +45,7 @@ const usePixelPhoto = () => {
           per_page: perPage,
         });
         setPhotos(response.data.photos);
-        totalImages.current = response.data.total_results;
+        totalImagesRef.current = response.data.total_results;
         totalPagesRef.current = Math.ceil(
           response.data.total_results / perPage
         );
@@ -103,7 +103,7 @@ const usePixelPhoto = () => {
     lastPage,
     goToPage,
     searchTerm,
-    totalImages: totalImages.current,
+    totalImages: totalImagesRef.current,
     maxPage: totalPagesRef.current,
     search: (input: string) => setSearchTerm(input),
   };
